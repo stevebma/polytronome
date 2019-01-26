@@ -1,2 +1,2 @@
-# polytronome
-A polyrhythmnic metronome
+# Polytronome
+A polyrhythmic metronome
