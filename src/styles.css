@@ -1,0 +1,10 @@
+/* You can add global styles to this file, and also import other style files */
+.row {
+  background: #f8f9fa;
+  margin-top: 20px;
+}
+
+.col {
+  border: solid 1px #6c757d;
+  padding: 10px;
+}
