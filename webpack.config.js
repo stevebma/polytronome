@@ -1,60 +1,37 @@
-const { resolve } = require('path');
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const TerserWebpackPlugin = require('terser-webpack-plugin');
 
-const isProd = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === 'production';
 
-const config = {
-  mode: isProd ? 'production' : 'development',
-  entry: {
-    index: './src/index.tsx',
-  },
-  output: {
-    path: resolve(__dirname, 'dist'),
-    filename: '[name].js',
-  },
-  resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
-  },
-  module: {
-    rules: [
-      {
-        test: /\.tsx?$/,
-        use: 'babel-loader',
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
-      },
-    ],
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      title: 'Babel + TypeScript + React = ❤️',
-      template: 'src/index.html',
-    }),
-  ],
+module.exports = {
+    devServer: {
+        port: 3000,
+        watchContentBase: true,
+    },
+    devtool: isProduction ? undefined : 'eval-source-map',
+    entry: {
+        index: './src/index.tsx',
+    },
+    mode: isProduction ? 'production' : 'development',
+    module: {
+        rules: [
+            {
+                exclude: /node_modules/,
+                loader: 'babel-loader',
+                test: /\.(js|jsx|ts|tsx)$/,
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader'],
+            },
+        ],
+    },
+    output: {
+        filename: 'index.bundle.js',
+        path: path.join(__dirname, '/dist'),
+    },
+    plugins: [new HtmlWebpackPlugin({ template: './src/index.html' })],
+    resolve: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    },
 };
-
-if (isProd) {
-  config.optimization = {
-    minimizer: [
-      new TerserWebpackPlugin(),
-    ],
-  };
-} else {
-  // for more information, see https://webpack.js.org/configuration/dev-server
-  config.devServer = {
-    port: 8080,
-    open: true,
-    hot: true,
-    compress: true,
-    stats: 'errors-only',
-    overlay: true,
-  };
-  config.mode = 'development';
-  config.devtool = 'inline-source-map';
-}
-
-module.exports = config;
