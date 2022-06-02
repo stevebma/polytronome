@@ -1,7 +1,7 @@
 import type Vex from 'vexflow';
 
-import { Bar } from './bar';
-import { TimeSignature } from './time-signature';
+import { Bar } from './Bar';
+import { TimeSignature } from './TimeSignature';
 
 export class Layer {
     index: number;
@@ -77,7 +77,4 @@ export class Layer {
         const scale = otherTime.upper / this.time.upper;
         return this.bars.flatMap(bar => bar.stretchToArray(scale));
     }
-    // toArray(): string[] {
-    //     return this.bars.flatMap(bar => bar.toArray());
-    // }
 }

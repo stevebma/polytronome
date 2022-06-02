@@ -3,8 +3,7 @@ import 'react';
 import React from 'react';
 import styled from 'styled-components';
 
-import type { Bar } from '../models/bar';
-import type { Beat } from '../models/beat';
+import type { Bar, Beat } from '../models';
 import { BeatComponent } from './Beat';
 
 type Props = {

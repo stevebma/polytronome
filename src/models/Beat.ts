@@ -1,4 +1,4 @@
-import { Note } from './note.enum';
+import { Note } from './Note';
 
 export class Beat {
     index: number;

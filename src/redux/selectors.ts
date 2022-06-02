@@ -1,5 +1,5 @@
 import { lcm } from '../math';
-import { TimeSignature } from '../models/time-signature';
+import { TimeSignature } from '../models';
 import type { RootState } from './store';
 
 export const selectCommonTimeSignature = (state: RootState): TimeSignature => {

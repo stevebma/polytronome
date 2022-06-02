@@ -1,7 +1,7 @@
 import Vex from 'vexflow';
 
-import { Beat } from './beat';
-import { Note } from './note.enum';
+import { Beat } from './Beat';
+import { Note } from './Note';
 
 export class Bar {
     index: number;

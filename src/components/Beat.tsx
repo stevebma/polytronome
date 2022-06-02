@@ -2,8 +2,8 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 
-import type { Beat } from '../models/beat';
-import { Note } from '../models/note.enum';
+import type { Beat } from '../models';
+import { Note } from '../models';
 
 const StyledButton = styled(Button)`
     transition: none;

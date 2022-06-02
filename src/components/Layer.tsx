@@ -3,9 +3,7 @@ import { Button } from 'react-bootstrap';
 import { Row } from 'react-bootstrap';
 import styled from 'styled-components';
 
-import type { Bar } from '../models/bar';
-import type { Layer } from '../models/layer';
-import type { TimeSignature } from '../models/time-signature';
+import type { Bar, Layer, TimeSignature } from '../models';
 import { BarComponent } from './Bar';
 import { MuteToggle } from './MuteToggle';
 import { TimeSignatureComponent } from './TimeSignature';

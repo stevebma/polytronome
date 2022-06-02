@@ -1,10 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
-import { Bar } from '../../models/bar';
-import { Layer } from '../../models/layer';
-import { Note } from '../../models/note.enum';
-import { TimeSignature } from '../../models/time-signature';
+import { Bar, Layer, Note, TimeSignature } from '../../models';
 
 export interface ScoreState {
     layers: Layer[];

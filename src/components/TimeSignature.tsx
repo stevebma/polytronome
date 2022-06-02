@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 import React from 'react';
 
-import { TimeSignature } from '../models/time-signature';
+import { TimeSignature } from '../models';
 import { NoteLengthChooser } from './NoteLengthChooser';
 
 type Props = {

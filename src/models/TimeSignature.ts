@@ -1,4 +1,4 @@
-import type { NoteValue } from './note-value.enum';
+import type { NoteValue } from './NoteValue';
 
 export class TimeSignature {
     upper: number;
