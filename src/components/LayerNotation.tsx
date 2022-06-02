@@ -1,135 +1,103 @@
-import React, { Component, RefObject } from 'react';
-import Vex from 'vexflow';
-import styled from 'styled-components';
-import { Layer } from '../models/layer';
-import { Bar } from '../models/bar';
+import React, { useEffect, useRef } from 'react';
 import { Row } from 'react-bootstrap';
+import styled from 'styled-components';
+import Vex from 'vexflow';
+
+import type { Bar } from '../models/bar';
+import type { Layer } from '../models/layer';
 
 type Props = {
-	layer: Layer;
-	width: number,
-	height: number
+    layer: Layer;
+    width?: number;
+    height?: number;
 };
 
-const NotationRow = styled(Row)`
-	background: #f8f9fa;
-	padding: 1em;
-	border: 1px solid grey;
+export const NotationRow = styled(Row)`
+    background: #f8f9fa;
+    padding: 1em;
+    border: 1px solid grey;
 `;
 
 const Notation = styled.div`
-	width: 100%;
-	background: white;
-	
-	// hack to align marcato articulation with stem -- instead of note
-	g.vf-modifiers {
-		transform: translateX(4px);
-		color: green;
-	}
+    width: 100%;
+    background: white;
+
+    // hack to align marcato articulation with stem -- instead of note
+    g.vf-modifiers {
+        transform: translateX(4px);
+        color: green;
+    }
 `;
 
-export class LayerNotationComponent extends Component<Props> {
+type Args = { renderer: Vex.Flow.Renderer; width?: number; height: number; layer: Layer; containerEl: HTMLDivElement };
 
-	static defaultProps = {
-		layer: Layer.create44(),
-		width: 1024,
-		height: 100
-	};
+const renderNotation: (args: Args) => void = ({ renderer, width, height, layer, containerEl }) => {
+    const autoWidth = width ? width : containerEl.clientWidth;
 
-	private readonly notationDiv: RefObject<HTMLDivElement>;
-	private renderer: Vex.Flow.Renderer | null;
+    // Size our SVG:
+    renderer.resize(autoWidth, height);
 
-	constructor(props: Props) {
-		super(props);
-		this.notationDiv = React.createRef<HTMLDivElement>();
-		this.renderer = null;
-	}
+    // And get a drawing context:
+    const context = renderer.getContext();
+    context.clear();
 
-	componentDidMount() {
-		this.initRenderer();
-		this.renderNotation();
-	}
+    // Create a stave at position 0, 0 of the determined width on the canvas.
+    const stave = new Vex.Flow.Stave(0, 0, autoWidth);
 
-	componentDidUpdate() {
-		this.renderNotation();
-	}
+    // add a percussion clef + time signature.
+    stave.addClef('percussion');
+    stave.addTimeSignature(layer.time.toString());
 
-	initRenderer() {
-		if (!this.notationDiv.current) {
-			throw Error('Failed to initialize LayerNotation component');
-		}
-		// render musical notation using vexflow
-		// create an SVG renderer and attach it to the referenced div element
-		this.renderer = new Vex.Flow.Renderer(this.notationDiv.current, Vex.Flow.Renderer.Backends.SVG);
-	}
+    // add repeat signs
+    stave.setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
+    stave.setEndBarType(Vex.Flow.Barline.type.REPEAT_END);
 
-	renderNotation() {
-		if (!this.renderer) {
-			throw Error('Failed to initialize LayerNotation renderer');
-		}
-		if (!this.notationDiv.current) {
-			throw Error('Failed to initialize LayerNotation component');
-		}
+    // connect it to the rendering context and draw the stave
+    stave.setContext(context).draw();
 
-		const { layer, width, height } = this.props;
+    // add all notes
+    let notes: Vex.Flow.Note[] = [];
 
-		const autoWidth = this.notationDiv.current.clientWidth;
+    layer.bars.forEach((bar: Bar, index: number) => {
+        const duration: string = layer.time.lower.toString();
+        const barNotes = bar.getStaveNotes(1, duration, 'b/4');
+        notes = notes.concat(barNotes);
 
-		// Size our SVG:
-		this.renderer.resize(autoWidth, height);
+        // render a barline for all except the final bar
+        if (index < layer.bars.length - 1) {
+            notes.push(new Vex.Flow.BarNote());
+        }
+    });
 
-		// And get a drawing context:
-		let context = this.renderer.getContext();
-		context.clear();
+    // Create a voice in the layers time signature and add above notes
+    Vex.Flow.Formatter.FormatAndDraw(context, stave, notes);
 
-		// Create a stave at position 0, 0 of width 1024 on the canvas.
-		let stave = new Vex.Flow.Stave(0, 0, autoWidth);
+    // Format and justify the notes to given width in pixels.
+    // const formatter = new Vex.Flow.Formatter().joinVoices([voice]).format([voice], 1024, {align_rests: false, context: context});
 
-		// add a percussion clef + time signature.
-		stave.addClef('percussion');
-		stave.addTimeSignature(layer.time.toString());
+    // Render voice
+    // voice.draw(context, stave);
+};
 
-		// add repeat signs
-		stave.setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
-		stave.setEndBarType(Vex.Flow.Barline.type.REPEAT_END);
+export const LayerNotationComponent: React.FC<Props> = ({ height = 200, layer, width }) => {
+    const notationRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        const target = notationRef.current;
+        if (!target) {
+            return;
+        }
+        target.textContent = '';
+        const renderer: Vex.Flow.Renderer = new Vex.Flow.Renderer(target, Vex.Flow.Renderer.Backends.SVG);
+        renderNotation({ renderer, width, height, layer, containerEl: notationRef.current });
+    }, [layer, width, height]);
 
-		// connect it to the rendering context and draw the stave
-		stave.setContext(context).draw();
-
-		// add all notes
-		let notes: Vex.Flow.Note[] = [];
-
-		layer.bars.forEach((bar: Bar, index: number) => {
-			const duration: string = layer.time.lower.toString();
-			let barNotes = bar.getStaveNotes(1, duration, 'b/4');
-			notes = notes.concat(barNotes);
-
-			// render a barline for all except the final bar
-			if (index < layer.bars.length - 1) {
-				notes.push(new Vex.Flow.BarNote());
-			}
-		});
-
-		// Create a voice in the layers time signature and add above notes
-		Vex.Flow.Formatter.FormatAndDraw(context, stave, notes);
-
-		// Format and justify the notes to given width in pixels.
-		// const formatter = new Vex.Flow.Formatter().joinVoices([voice]).format([voice], 1024, {align_rests: false, context: context});
-
-		// Render voice
-		// voice.draw(context, stave);
-	}
-
-	render() {
-		const { layer } = this.props;
-		return (
-			<NotationRow>
-				<p>
-					layer: {layer.index} | time signature: {layer.time.toString()} |{' '}
-					{`${layer.size} ${layer.size === 1 ? 'bar' : 'bars'}`}
-				</p>
-				<Notation ref={this.notationDiv} />
-			</NotationRow>
-		);
-	}
-}
+    return (
+        <NotationRow>
+            <p>
+                layer: {layer.index} | time signature: {layer.time.toString()} |{' '}
+                {`${layer.size} ${layer.size === 1 ? 'bar' : 'bars'}`}
+            </p>
+            <Notation ref={notationRef} />
+        </NotationRow>
+    );
+};

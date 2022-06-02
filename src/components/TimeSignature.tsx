@@ -1,67 +1,50 @@
-import React, { ChangeEvent, Component } from 'react';
+import type { ChangeEvent } from 'react';
+import React from 'react';
+
 import { TimeSignature } from '../models/time-signature';
 import { NoteLengthChooser } from './NoteLengthChooser';
 
 type Props = {
-	time: TimeSignature;
-	isDisabled: boolean;
-	onChange: (time: TimeSignature) => void;
+    time: TimeSignature;
+    isDisabled?: boolean;
+    onChange: (time: TimeSignature) => void;
 };
 
-type State = {};
+export const TimeSignatureComponent: React.FC<Props> = ({ isDisabled = false, onChange, time }) => {
+    const handleUpperChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const upper = parseInt(event.target.value);
+        onChange(new TimeSignature(upper, time.lower));
+    };
 
-export class TimeSignatureComponent extends Component<Props, State> {
-	static defaultProps = {
-		isDisabled: false,
-		onChange: () => {},
-	};
+    const handleLowerChange = (value: number) => {
+        onChange(new TimeSignature(time.upper, value));
+    };
 
-	constructor(props: Props) {
-		super(props);
-		this.handleUpperChange = this.handleUpperChange.bind(this);
-		this.handleLowerChange = this.handleLowerChange.bind(this);
-	}
-
-	handleUpperChange(event: ChangeEvent<HTMLInputElement>) {
-		const upper = parseInt(event.target.value);
-		const time = new TimeSignature(upper, this.props.time.lower);
-		this.props.onChange(time);
-	}
-
-	handleLowerChange(value: number) {
-		const time = new TimeSignature(this.props.time.upper, value);
-		this.props.onChange(time);
-	}
-
-	render() {
-		const time = this.props.time;
-		const isDisabled = this.props.isDisabled;
-		return (
-			<div className="form-inline">
-				<label className="sr-only">Time</label>
-				<div className="input-group mb-2 mr-sm-2">
-					<div className="input-group-prepend">
-						<div className="input-group-text">
-							{time.upper}/{time.lower}
-						</div>
-					</div>
-					<input
-						type="number"
-						className="form-control"
-						min="1"
-						max="17"
-						disabled={isDisabled}
-						value={time.upper}
-						onChange={this.handleUpperChange}
-					/>
-				</div>
-				<NoteLengthChooser
-					duration={time.lower}
-					choices={[2, 4, 8]}
-					isDisabled={isDisabled}
-					onSelect={this.handleLowerChange}
-				/>
-			</div>
-		);
-	}
-}
+    return (
+        <div className="form-inline">
+            <label className="sr-only">Time</label>
+            <div className="input-group mb-2 mr-sm-2">
+                <div className="input-group-prepend">
+                    <div className="input-group-text">
+                        {time.upper}/{time.lower}
+                    </div>
+                </div>
+                <input
+                    className="form-control"
+                    disabled={isDisabled}
+                    max="17"
+                    min="1"
+                    onChange={handleUpperChange}
+                    type="number"
+                    value={time.upper}
+                />
+            </div>
+            <NoteLengthChooser
+                choices={[2, 4, 8]}
+                duration={time.lower}
+                isDisabled={isDisabled}
+                onSelect={handleLowerChange}
+            />
+        </div>
+    );
+};

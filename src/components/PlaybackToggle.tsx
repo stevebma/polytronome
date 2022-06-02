@@ -1,20 +1,17 @@
-import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
+import { faPlay, faStop } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay, faStop } from '@fortawesome/free-solid-svg-icons'
+import React from 'react';
+import { Button } from 'react-bootstrap';
 
 type Props = {
-	isPlaying: boolean;
-	onClick?: () => void;
+    isPlaying: boolean;
+    onClick?: () => void;
 };
 
-export class PlaybackToggle extends Component<Props> {
-	render() {
-		const { isPlaying, onClick } = this.props;
-		return (
-			<Button variant="primary" title="Toggle playback" onClick={onClick}>
-				<FontAwesomeIcon icon={isPlaying ? faStop : faPlay} />
-			</Button>
-		);
-	}
-}
+export const PlaybackToggle: React.FC<Props> = ({ isPlaying, onClick }) => {
+    return (
+        <Button onClick={onClick} title="Toggle playback" variant="primary">
+            <FontAwesomeIcon icon={isPlaying ? faStop : faPlay} />
+        </Button>
+    );
+};
