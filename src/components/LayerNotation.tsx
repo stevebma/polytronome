@@ -3,7 +3,7 @@ import { Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import Vex from 'vexflow';
 
-import type { Bar, Layer} from '../models';
+import type { Bar, Layer } from '../models';
 
 type Props = {
     layer: Layer;
