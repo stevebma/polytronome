@@ -2134,7 +2134,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/vexflow@npm:^1.2.33":
+"@types/vexflow@npm:^1.2.38":
   version: 1.2.38
   resolution: "@types/vexflow@npm:1.2.38"
   checksum: ccbb7a1e81f158e38e96927c37acd71d402200db5dc6e67e0cfd48195ebadf520803480b1a55de750f648da5e1b0e0a3302c11c2ed282619e10d86a95b6ac618
@@ -7064,7 +7064,7 @@ __metadata:
     "@types/react-dom": ^18.0.5
     "@types/react-redux": ^7.1.24
     "@types/styled-components": ^5.1.25
-    "@types/vexflow": ^1.2.33
+    "@types/vexflow": ^1.2.38
     "@typescript-eslint/eslint-plugin": ^5.27.0
     "@typescript-eslint/parser": ^5.27.0
     babel-eslint: ^10.1.0
@@ -7098,7 +7098,7 @@ __metadata:
     terser-webpack-plugin: ^5.3.3
     tone: ^14.7.77
     typescript: ^4.7.2
-    vexflow: ^1.2.93
+    vexflow: ^4.0.3
     webpack: ^5.73.0
     webpack-cli: ^4.9.2
     webpack-dev-server: ^4.9.1
@@ -9021,10 +9021,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vexflow@npm:^1.2.93":
-  version: 1.2.93
-  resolution: "vexflow@npm:1.2.93"
-  checksum: 025832c634235072e0b35525ca6802f284bd20477c492950238942b72915d1b4e8a3656fff5bc053db325d7ab780bfb7ccf09667eff6a75dc07de44c55fe7f48
+"vexflow@npm:^4.0.3":
+  version: 4.0.3
+  resolution: "vexflow@npm:4.0.3"
+  checksum: cf4b030332a2592d9b370f56df23d220f23f204de7f302f7a04c6954374d478aa225a5a7bc79112a04efb9f0bb7495fc010266ed82ec12c609f6a3b24c03abc0
   languageName: node
   linkType: hard
 
