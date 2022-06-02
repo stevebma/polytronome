@@ -5,8 +5,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = {
     devServer: {
-        port: 3000,
-        watchContentBase: true,
+        port: 3000
     },
     devtool: isProduction ? undefined : 'eval-source-map',
     entry: {
