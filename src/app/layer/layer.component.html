@@ -1,8 +1,0 @@
-
-<app-time-signature (changed)="onTimeSignatureChanged($event)" [disabled]="!isMutable" [time]="layer.time"></app-time-signature>
-
-<div [ngClass]="colClass()" *ngFor="let bar of layer.bars">
-  <app-bar [bar]="bar"></app-bar>
-</div>
-<button class="btn btn-lg btn-info" [disabled]="!isMutable || layer.size <= 1" (click)="onReduceClick()">-</button>
-<button class="btn btn-lg btn-info" [disabled]="!isMutable || layer.size >= 4" (click)="onExtendClick()">+</button>
