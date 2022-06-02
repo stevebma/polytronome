@@ -1,21 +1,19 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "allowJs": false,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
     "isolatedModules": false,
-    "noEmit": true,
-    "jsx": "preserve",
-    "typeRoots": [
-      "./src/types", "./node_modules/@types"]
+    "jsx": "react",
+    "lib": ["es2019", "dom"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmit": false,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es6",
   },
-  "include": [
-    "src"
+  "exclude": [
+    ".storybook/assets"
   ]
 }
