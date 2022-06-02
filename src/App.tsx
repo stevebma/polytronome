@@ -3,7 +3,7 @@ import 'vexflow';
 
 import React, { useEffect, useRef } from 'react';
 import { Container, Row } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Vex from 'vexflow';
 
@@ -14,6 +14,7 @@ import { PlaybackToggle } from './components/PlaybackToggle';
 import { Tempo } from './components/Tempo';
 import type { Layer, TimeSignature } from './models';
 import { Note } from './models';
+import { useAppDispatch } from './redux/hooks';
 import { selectCommonTimeSignature } from './redux/selectors';
 import { toggleMute, toggleMuteLayer } from './redux/slices/audio';
 import { adjustTempo } from './redux/slices/playback';
@@ -71,7 +72,7 @@ const CombinedNotation = styled.div`
 `;
 
 export const App: React.FC<Props> = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const combinedNotation = useRef<HTMLDivElement>(null);
     const handleTempoChange = (value: number) => {
         dispatch(adjustTempo(value));
