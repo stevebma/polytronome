@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import styled from 'styled-components';
 
-import type { ToggleStatus, SequencerRowClickEvent } from '../../types';
+import type { SequencerRowClickEvent, ToggleStatus } from '../../types';
 import { StepToggle } from '../StepToggle';
 
 type BeatSequencerRowProps = {
@@ -57,7 +57,7 @@ export const StepSequencerRow: React.FC<BeatSequencerRowProps> = ({
     return (
         <StyledRow>
             {steps.map((step, index) => {
-                const label = showIndices ? `${(index % groupSize) + 1}` : 'undefined';
+                const label = showIndices ? `${(index % groupSize) + 1}` : undefined;
                 return (
                     <Fragment key={`${rowId}-toggle-${index}`}>
                         {index % groupSize === 0 && index > 0 && <GroupDivider key={`${rowId}-divider-${index}`} />}

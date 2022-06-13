@@ -35,17 +35,7 @@ const Template: ComponentStory<typeof StepSequencerRow> = args => (
 
 export const Simple = Template.bind({});
 Simple.args = {};
-//
-// export const Off = Template.bind({});
-// Off.args = {
-//     status: 'off',
-// };
-//
-// export const Emphasized = Template.bind({});
-// Emphasized.args = {
-//     status: 'emphasized',
-// };
-//
+
 const TemplateWithState: ComponentStory<typeof StepSequencerRow> = args => {
     const [steps, setSteps] = useState<ToggleStatus[]>(args.steps);
     const toggle = (evt: SequencerRowClickEvent) => {
