@@ -7,7 +7,7 @@ import type { SequencerRowClickEvent, ToggleStatus } from '../../types';
 import { StepSequencerRow } from './StepSequencerRow';
 
 const orange = 'rgb(210, 158, 64)';
-// const green = 'rgb(101, 207, 76)';
+const green = 'rgb(101, 207, 76)';
 
 export default {
     title: 'StepSequencerRow',
@@ -58,4 +58,6 @@ const TemplateWithState: ComponentStory<typeof StepSequencerRow> = args => {
 };
 
 export const Interactive = TemplateWithState.bind({});
-Interactive.args = {};
+Interactive.args = {
+    color: green,
+};
