@@ -4,13 +4,14 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 
 type Props = {
+    isDisabled?: boolean;
     isMuted: boolean;
     onClick?: () => void;
 };
 
-export const MuteToggle: React.FC<Props> = ({ isMuted, onClick }) => {
+export const MuteToggle: React.FC<Props> = ({ isDisabled, isMuted, onClick }) => {
     return (
-        <Button onClick={onClick} title="mute" variant="primary">
+        <Button disabled={isDisabled} onClick={onClick} title="mute" variant="primary">
             <FontAwesomeIcon icon={isMuted ? faVolumeXmark : faVolumeHigh} />
         </Button>
     );

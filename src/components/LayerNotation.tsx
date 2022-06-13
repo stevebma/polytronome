@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Row } from 'react-bootstrap';
 import styled from 'styled-components';
+import type { Renderer, Stave, StaveNote } from 'vexflow';
 import Vex from 'vexflow';
 
 import type { Bar, Layer } from '../models';
@@ -28,10 +29,11 @@ const Notation = styled.div`
     }
 `;
 
-type Args = { renderer: Vex.Flow.Renderer; width?: number; height: number; layer: Layer; containerEl: HTMLDivElement };
+type Args = { renderer: Renderer; width?: number; height: number; layer: Layer; containerEl: HTMLDivElement };
 
 const renderNotation: (args: Args) => void = ({ renderer, width, height, layer, containerEl }) => {
     const autoWidth = width ? width : containerEl.clientWidth;
+    const measureWidth = autoWidth / layer.bars.length;
 
     // Size our SVG:
     renderer.resize(autoWidth, height);
@@ -40,36 +42,36 @@ const renderNotation: (args: Args) => void = ({ renderer, width, height, layer, 
     const context = renderer.getContext();
     context.clear();
 
-    // Create a stave at position 0, 0 of the determined width on the canvas.
-    const stave = new Vex.Flow.Stave(0, 0, autoWidth);
-
-    // add a percussion clef + time signature.
-    stave.addClef('percussion');
-    stave.addTimeSignature(layer.time.toString());
-
-    // add repeat signs
-    stave.setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
-    stave.setEndBarType(Vex.Flow.Barline.type.REPEAT_END);
-
-    // connect it to the rendering context and draw the stave
-    stave.setContext(context).draw();
-
     // add all notes
-    let notes: Vex.Flow.Note[] = [];
-
+    let notes: StaveNote[] = [];
+    // Create a stave at position 0, 0 of the determined width on the canvas.
+    let stave: Stave = new Vex.Flow.Stave(0, 0, measureWidth);
     layer.bars.forEach((bar: Bar, index: number) => {
-        const duration: string = layer.time.lower.toString();
-        const barNotes = bar.getStaveNotes(1, duration, 'b/4');
-        notes = notes.concat(barNotes);
+        if (index === 0) {
+            stave = new Vex.Flow.Stave(0, 0, measureWidth);
+            // add a percussion clef + time signature.
+            stave.addClef('percussion');
+            stave.addTimeSignature(layer.time.toString());
 
-        // render a barline for all except the final bar
-        if (index < layer.bars.length - 1) {
-            notes.push(new Vex.Flow.BarNote());
+            // add repeat signs
+            stave.setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN);
         }
-    });
 
-    // Create a voice in the layers time signature and add above notes
-    Vex.Flow.Formatter.FormatAndDraw(context, stave, notes);
+        if (index > 0) {
+            stave = new Vex.Flow.Stave(stave.getX() + measureWidth, 0, measureWidth);
+        }
+        if (index === layer.bars.length - 1) {
+            stave.setEndBarType(Vex.Flow.Barline.type.REPEAT_END);
+        }
+        const duration: string = layer.time.lower.toString();
+        notes = bar.getStaveNotes(1, duration, 'b/4');
+        // connect it to the rendering context and draw the stave
+        stave.setContext(context).draw();
+
+        // Create a voice in the layers time signature and add above notes
+        // ensures a bar line is rendered as well
+        Vex.Flow.Formatter.FormatAndDraw(context, stave, notes);
+    });
 
     // Format and justify the notes to given width in pixels.
     // const formatter = new Vex.Flow.Formatter().joinVoices([voice]).format([voice], 1024, {align_rests: false, context: context});
@@ -78,7 +80,7 @@ const renderNotation: (args: Args) => void = ({ renderer, width, height, layer, 
     // voice.draw(context, stave);
 };
 
-export const LayerNotationComponent: React.FC<Props> = ({ height = 200, layer, width }) => {
+export const LayerNotationComponent: React.FC<Props> = ({ height = 100, layer, width }) => {
     const notationRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         const target = notationRef.current;
@@ -86,7 +88,7 @@ export const LayerNotationComponent: React.FC<Props> = ({ height = 200, layer, w
             return;
         }
         target.textContent = '';
-        const renderer: Vex.Flow.Renderer = new Vex.Flow.Renderer(target, Vex.Flow.Renderer.Backends.SVG);
+        const renderer: Renderer = new Vex.Flow.Renderer(target, Vex.Flow.Renderer.Backends.SVG);
         renderNotation({ renderer, width, height, layer, containerEl: notationRef.current });
     }, [layer, width, height]);
 

@@ -1,6 +1,7 @@
 import type { MouseEventHandler } from 'react';
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
+import type { Renderer } from 'vexflow';
 import Vex from 'vexflow';
 
 type Props = {
@@ -21,7 +22,7 @@ const NoteLabel = styled.span`
     font-weight: bold;
 `;
 
-type DrawSingleNoteArgs = { renderer: Vex.Flow.Renderer; width: number; height: number; duration: number };
+type DrawSingleNoteArgs = { renderer: Renderer; width: number; height: number; duration: number };
 
 const drawSingleNote: (args: DrawSingleNoteArgs) => void = ({ renderer, width, height, duration }) => {
     renderer.resize(width, height);
@@ -56,7 +57,7 @@ export const SingleNote: React.FC<Props> = ({
             return;
         }
         target.textContent = '';
-        const renderer: Vex.Flow.Renderer = new Vex.Flow.Renderer(target, Vex.Flow.Renderer.Backends.SVG);
+        const renderer: Renderer = new Vex.Flow.Renderer(target, Vex.Flow.Renderer.Backends.SVG);
         drawSingleNote({ renderer, width, height, duration });
     }, [duration, width, height]);
 

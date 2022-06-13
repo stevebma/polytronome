@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Vex from 'vexflow';
 
-import { LayerComponent } from './components/Layer';
+import { LayerControls } from './components/LayerControls';
 import { LayerNotationComponent } from './components/LayerNotation';
 import { MuteToggle } from './components/MuteToggle';
 import { PlaybackToggle } from './components/PlaybackToggle';
@@ -21,6 +21,7 @@ import { adjustTempo } from './redux/slices/playback';
 import { changeNote, changeTimeSignature, extendLayer, shrinkLayer, toggleNote } from './redux/slices/score';
 import type { RootState } from './redux/store';
 import { toggle } from './redux/thunks';
+import type { SequencerClickEvent } from './types';
 
 type Props = {
     /* none yet */
@@ -32,7 +33,7 @@ const renderCommonLayer = (targetEl: HTMLDivElement, layers: Layer[], commonTime
     }
     targetEl.innerHTML = '';
     const width = targetEl.getBoundingClientRect().width;
-    const height = 200;
+    const height = 100;
     const renderer = new Vex.Flow.Renderer(targetEl, Vex.Flow.Renderer.Backends.SVG);
     renderer.resize(width, height);
 
@@ -61,10 +62,9 @@ const renderCommonLayer = (targetEl: HTMLDivElement, layers: Layer[], commonTime
 };
 
 const CombinedNotationWrap = styled.div`
-    border: 1px solid blue;
     padding: 1em;
     width: 100%;
-    height: 200px;
+    height: 150px;
 `;
 
 const CombinedNotation = styled.div`
@@ -127,28 +127,25 @@ export const App: React.FC<Props> = () => {
                     }}
                 />
             </Row>
-            {layers.map((layer: Layer) => {
-                return (
-                    <LayerComponent
-                        isDisabled={isPlaying}
-                        isMuted={isLayerMuted[layer.index]}
-                        key={`layer-${layer.index}`}
-                        layer={layer}
-                        onBeatClick={handleBeatClick}
-                        onBeatDoubleClick={handleBeatDoubleClick}
-                        onExtend={() => {
-                            dispatch(extendLayer(layer.index));
-                        }}
-                        onMuteToggle={() => {
-                            dispatch(toggleMuteLayer(layer.index));
-                        }}
-                        onShrink={() => {
-                            dispatch(shrinkLayer(layer.index));
-                        }}
-                        onTimeSignatureChange={handleTimeSignatureChange}
-                    />
-                );
-            })}
+            <LayerControls
+                isDisabled={isPlaying}
+                isLayerMuted={isLayerMuted}
+                layers={layers}
+                onBeatClick={(evt: SequencerClickEvent) => handleBeatClick(evt.rowIndex, evt.groupIndex, evt.subIndex)}
+                onBeatDoubleClick={(evt: SequencerClickEvent) =>
+                    handleBeatDoubleClick(evt.rowIndex, evt.groupIndex, evt.subIndex)
+                }
+                onExtend={(layerIndex: number) => {
+                    dispatch(extendLayer(layerIndex));
+                }}
+                onMuteToggle={layerIndex => {
+                    dispatch(toggleMuteLayer(layerIndex));
+                }}
+                onShrink={layerIndex => {
+                    dispatch(shrinkLayer(layerIndex));
+                }}
+                onTimeSignatureChange={handleTimeSignatureChange}
+            />
         </Container>
     );
 };
