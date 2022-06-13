@@ -3,7 +3,7 @@ import type { ComponentMeta, ComponentStory } from '@storybook/react';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import type { ToggleStatus, SequencerRowClickEvent } from '../../types';
+import type { SequencerRowClickEvent, ToggleStatus } from '../../types';
 import { StepSequencerRow } from './StepSequencerRow';
 
 const orange = 'rgb(210, 158, 64)';

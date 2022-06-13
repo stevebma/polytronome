@@ -3,7 +3,7 @@ import type { ComponentMeta, ComponentStory } from '@storybook/react';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import type { ToggleStatus, SequencerClickEvent } from '../../types';
+import type { SequencerClickEvent, ToggleStatus } from '../../types';
 import { StepSequencer } from './StepSequencer';
 
 export default {
