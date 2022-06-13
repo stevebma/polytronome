@@ -1,3 +1,4 @@
+import type { StaveNote } from 'vexflow';
 import Vex from 'vexflow';
 
 import { Beat } from './Beat';
@@ -31,7 +32,7 @@ export class Bar {
         return true;
     }
 
-    getStaveNotes(scale: number, duration: string, key: string, color = 'black'): Array<Vex.Flow.StaveNote> {
+    getStaveNotes(scale: number, duration: string, key: string, color = 'black'): Array<StaveNote> {
         const makeRest = () => {
             return new Vex.Flow.StaveNote({
                 clef: 'percussion',
@@ -40,13 +41,13 @@ export class Bar {
                 stem_direction: 1, // up
             });
         };
-        const notes: Vex.Flow.StaveNote[] = [];
+        const notes: StaveNote[] = [];
         for (let index = 0; index < this.length * scale; index++) {
             notes.push(makeRest());
         }
 
         this.beats.forEach((beat: Beat, index: number) => {
-            const note: Vex.Flow.StaveNote = new Vex.Flow.StaveNote({
+            const note: StaveNote = new Vex.Flow.StaveNote({
                 clef: 'percussion',
                 keys: [key],
                 duration: `${duration}${beat.note === Note.Rest ? 'r' : ''}`,
@@ -55,7 +56,7 @@ export class Bar {
             if (beat.note === Note.Accent) {
                 // add marcato articulation, positioned above the note
                 const marcato = new Vex.Flow.Articulation('a^').setPosition(Vex.Flow.Modifier.Position.ABOVE);
-                note.addArticulation(0, marcato);
+                note.addModifier(marcato, 0);
             }
             note.setStyle({ fillStyle: color, strokeStyle: color });
             notes[index * scale] = note;
