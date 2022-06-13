@@ -1,4 +1,4 @@
-import type Vex from 'vexflow';
+import type { StaveNote } from 'vexflow';
 
 import { Bar } from './Bar';
 import { TimeSignature } from './TimeSignature';
@@ -23,8 +23,8 @@ export class Layer {
         return new Layer(index, new TimeSignature(4, 4), [new Bar(1, [1, 1, 1, 1])]);
     }
 
-    getStaveNotes(scale: number, key: string, _duration?: string): Vex.Flow.StaveNote[] {
-        let notes: Vex.Flow.StaveNote[] = [];
+    getStaveNotes(scale: number, key: string, _duration?: string): StaveNote[] {
+        let notes: StaveNote[] = [];
         this.bars.forEach((bar: Bar) => {
             const duration: string = _duration ? _duration : this.time.lower.toString();
             notes = notes.concat(bar.getStaveNotes(scale, duration, key));
