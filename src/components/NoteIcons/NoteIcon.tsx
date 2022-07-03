@@ -40,6 +40,6 @@ export const NoteIcon = ({ duration, color }: NoteIconProps): JSX.Element => {
             }
             break;
         default:
-            throw new Error('unsupported duration');
+            throw new Error(`unsupported duration ${duration}`);
     }
 };

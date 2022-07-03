@@ -12,3 +12,5 @@ export type SequencerRowClickEvent = {
     groupIndex: number;
     subIndex: number;
 };
+
+export type Duration = 1 | 2 | 4 | 8 | 16;
