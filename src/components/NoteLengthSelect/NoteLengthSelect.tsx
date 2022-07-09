@@ -44,12 +44,13 @@ export const NoteLengthSelect: React.FC<NoteLengthSelectProps> = ({
         onChange(parsedValue);
     };
     return (
-        <FormControl disabled={disabled} size={size}>
+        <FormControl disabled={disabled} margin="normal" size={size}>
             {label && <InputLabel id={labelId}>{label}</InputLabel>}
             <Select
                 autoWidth
                 id={id}
                 labelId={label ? labelId : undefined}
+                margin="dense"
                 onChange={handleChange}
                 size={size}
                 value={value}
