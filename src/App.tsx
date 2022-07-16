@@ -2,16 +2,13 @@ import './math';
 import 'vexflow';
 
 import React, { useEffect, useRef } from 'react';
-import { Container, Row } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Vex from 'vexflow';
 
 import { LayerControls } from './components/LayerControls';
 import { LayerNotationComponent } from './components/LayerNotation';
-import { MuteToggle } from './components/MuteToggle';
-import { PlaybackToggle } from './components/PlaybackToggle';
-import { Tempo } from './components/Tempo';
+import { MainControls } from './components/MainControls/MainControls';
 import type { Layer, TimeSignature } from './models';
 import { Note } from './models';
 import { useAppDispatch } from './redux/hooks';
@@ -71,6 +68,21 @@ const CombinedNotation = styled.div`
     width: 100%;
 `;
 
+const Container = styled.div`
+    min-width: 800px;
+    max-width: 1280px;
+    margin: 0 auto;
+`;
+
+const Row = styled.div`
+    width: 100%;
+`;
+
+const MainControlsRow = styled.div`
+    width: 100%;
+    margin: 20px 0;
+`;
+
 export const App: React.FC<Props> = () => {
     const dispatch = useAppDispatch();
     const combinedNotation = useRef<HTMLDivElement>(null);
@@ -88,6 +100,14 @@ export const App: React.FC<Props> = () => {
 
     const handleBeatDoubleClick = (layerIndex: number, barIndex: number, beatIndex: number) => {
         dispatch(changeNote({ layerIndex, barIndex, beatIndex, note: Note.Accent }));
+    };
+
+    const handleMuteToggle = () => {
+        dispatch(toggleMute());
+    };
+
+    const handlePlaybackToggle = () => {
+        dispatch(toggle());
     };
 
     const { bpm, isPlaying } = useSelector((state: RootState) => state.playback);
@@ -112,21 +132,16 @@ export const App: React.FC<Props> = () => {
                     <CombinedNotation ref={combinedNotation} />
                 </CombinedNotationWrap>
             </Row>
-            <Row>
-                <Tempo bpm={bpm} onChange={handleTempoChange} />
-                <PlaybackToggle
-                    isPlaying={isPlaying}
-                    onClick={() => {
-                        dispatch(toggle());
-                    }}
-                />
-                <MuteToggle
+            <MainControlsRow>
+                <MainControls
+                    bpm={bpm}
                     isMuted={isMuted}
-                    onClick={() => {
-                        dispatch(toggleMute());
-                    }}
+                    isPlaying={isPlaying}
+                    onMuteToggle={handleMuteToggle}
+                    onPlaybackToggle={handlePlaybackToggle}
+                    onTempoChange={handleTempoChange}
                 />
-            </Row>
+            </MainControlsRow>
             <LayerControls
                 isDisabled={isPlaying}
                 isLayerMuted={isLayerMuted}

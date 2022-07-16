@@ -1,5 +1,7 @@
+import { faSquareMinus, faSquarePlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconButton } from '@mui/material';
 import React from 'react';
-import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
 
 import type { Layer, TimeSignature } from '../../models';
@@ -8,7 +10,7 @@ import type { SequencerClickEvent } from '../../types';
 import type { ToggleStatus } from '../../types';
 import { MuteToggle } from '../MuteToggle';
 import { StepSequencer } from '../StepSequencer';
-import { TimeSignatureComponent } from '../TimeSignature';
+import { TimeSignatureSelect } from '../TimeSignatureSelect';
 
 type LayerControlsProps = {
     isDisabled?: boolean;
@@ -57,12 +59,13 @@ const Grid = styled.div`
 
 const LeftControls = styled.div`
     display: grid;
-    grid-column: 1 / span 3;
+    grid-column: 1 / span 4;
 `;
 
 const SequencerContainer = styled.div`
     display: grid;
-    grid-column: 4 / span 20;
+    grid-column: 5 / span 19;
+    padding: 0 5px;
 `;
 
 const RightControls = styled.div`
@@ -88,8 +91,8 @@ export const LayerControls: React.FC<LayerControlsProps> = ({
             <LeftControls>
                 {layers.map((layer: Layer, index: number) => (
                     <StyledRow key={`time-control-${index}`}>
-                        <TimeSignatureComponent
-                            isDisabled={isDisabled}
+                        <TimeSignatureSelect
+                            disabled={isDisabled}
                             onChange={timeSignature => onTimeSignatureChange(index, timeSignature)}
                             time={layer.time}
                         />
@@ -108,12 +111,24 @@ export const LayerControls: React.FC<LayerControlsProps> = ({
             <RightControls>
                 {layers.map((layer: Layer, index: number) => (
                     <StyledRow key={`layer-controls-${index}`}>
-                        <Button disabled={isDisabled || layer.size <= 1} onClick={() => onShrink(index)} variant="info">
-                            -
-                        </Button>
-                        <Button disabled={isDisabled || layer.size >= 4} onClick={() => onExtend(index)} variant="info">
-                            +
-                        </Button>
+                        <IconButton
+                            aria-label="Shrink"
+                            color="primary"
+                            disabled={isDisabled || layer.size <= 1}
+                            onClick={() => onShrink(index)}
+                            size="medium"
+                        >
+                            <FontAwesomeIcon icon={faSquareMinus} />
+                        </IconButton>
+                        <IconButton
+                            aria-label="Extend"
+                            color="primary"
+                            disabled={isDisabled || layer.size >= 4}
+                            onClick={() => onExtend(index)}
+                            size="medium"
+                        >
+                            <FontAwesomeIcon icon={faSquarePlus} />
+                        </IconButton>
                         <MuteToggle
                             isDisabled={isDisabled}
                             isMuted={isLayerMuted && isLayerMuted[index]}
