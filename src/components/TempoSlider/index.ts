@@ -1,0 +1,1 @@
+export { TempoSlider } from './TempoSlider';

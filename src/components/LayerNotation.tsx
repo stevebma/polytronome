@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import type { Renderer, Stave, StaveNote } from 'vexflow';
 import Vex from 'vexflow';
@@ -12,7 +11,7 @@ type Props = {
     height?: number;
 };
 
-export const NotationRow = styled(Row)`
+export const NotationRow = styled.div`
     background: #f8f9fa;
     padding: 1em;
     border: 1px solid grey;

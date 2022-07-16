@@ -1,16 +1,22 @@
 import { faPlay, faStop } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Button from '@mui/material/Button';
 import React from 'react';
-import { Button } from 'react-bootstrap';
 
-type Props = {
+type PlaybackToggleProps = {
     isPlaying: boolean;
-    onClick?: () => void;
+    onClick: () => void;
 };
 
-export const PlaybackToggle: React.FC<Props> = ({ isPlaying, onClick }) => {
+export const PlaybackToggle: React.FC<PlaybackToggleProps> = ({ isPlaying, onClick }) => {
     return (
-        <Button onClick={onClick} title="Toggle playback" variant="primary">
+        <Button
+            aria-label="Toggle playback"
+            color={isPlaying ? 'secondary' : 'primary'}
+            onClick={onClick}
+            size="small"
+            variant={isPlaying ? 'contained' : 'contained'}
+        >
             <FontAwesomeIcon icon={isPlaying ? faStop : faPlay} />
         </Button>
     );

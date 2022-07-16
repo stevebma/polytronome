@@ -1,18 +1,19 @@
 import { faVolumeHigh, faVolumeXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconButton } from '@mui/material';
 import React from 'react';
-import { Button } from 'react-bootstrap';
 
-type Props = {
+type MuteToggleProps = {
     isDisabled?: boolean;
     isMuted: boolean;
     onClick?: () => void;
 };
 
-export const MuteToggle: React.FC<Props> = ({ isDisabled, isMuted, onClick }) => {
+export const MuteToggle: React.FC<MuteToggleProps> = ({ isDisabled, isMuted, onClick }) => {
+    const label = isMuted ? 'unmute' : 'mute';
     return (
-        <Button disabled={isDisabled} onClick={onClick} title="mute" variant="primary">
+        <IconButton aria-label={label} color="primary" disabled={isDisabled} onClick={onClick} size="small">
             <FontAwesomeIcon icon={isMuted ? faVolumeXmark : faVolumeHigh} />
-        </Button>
+        </IconButton>
     );
 };
